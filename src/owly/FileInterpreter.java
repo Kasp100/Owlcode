@@ -25,7 +25,7 @@ public class FileInterpreter {
 			if(word == null) {
 				throw new SyntaxException("Unexpected character", charsRead, linesRead, charsReadInLine,
 						"file: " + fileToRead.getAbsolutePath(), "unexpected characters");
-			}else if(word.equals("template")) {
+			}else if(word.equals("class")) {
 				
 			}else {
 				throw new SyntaxException("Unexpected word", charsRead, linesRead, charsReadInLine,
@@ -78,5 +78,21 @@ public class FileInterpreter {
 			}
 		} while (lastCharRead != -1);
 		return null;
+	}
+	
+	String getMeaning(String word) {
+		if(word.equals("if") || word.equals("while") || word.equals("for")
+				|| word.equals("else")|| word.equals("return")) {
+			return "keyword";
+		}else if(word.equals("null")) {
+			return "null";
+		}else if(word.equals("int") || word.equals("long") || word.equals("boolean")
+				|| word.equals("float")|| word.equals("double")) {
+			return "primitive";
+		}else if(Character.isUpperCase(word.charAt(0))) {
+			return "class";
+		}else {
+			return "name";
+		}
 	}
 }
