@@ -1,4 +1,4 @@
-package owly;
+package owlcode;
 
 public class Classy {
 	public String className;
