@@ -54,7 +54,7 @@ public class FileInterpreter {
 			readChar(); 
 			if(lastCharRead != -1) {
 				
-				boolean isLetter = ("_abcdefghijklmnopqrstuvwxyz0123456789").contains((lastCharRead + "").toLowerCase());
+				boolean isLetter = ("_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789").contains((lastCharRead + "").toLowerCase());
 				boolean isSpace = ("" + lastCharRead).isBlank();
 				
 				if(readingWord) {
