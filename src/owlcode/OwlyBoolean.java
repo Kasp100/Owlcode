@@ -1,5 +1,5 @@
 package owlcode;
 
-public class OwlyBoolean {
+public class OwlyBoolean extends Primitivey {
 	public boolean value;
 }

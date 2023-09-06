@@ -1,3 +1,3 @@
 package owlcode;
 
-public class Primitivey extends Classy {}
+public class Primitivey {}

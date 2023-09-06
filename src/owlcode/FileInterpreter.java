@@ -14,9 +14,11 @@ public class FileInterpreter {
 	InputStreamReader fileReader;
 	private int lastCharRead;
 	int charsRead, linesRead, charsReadInLine;
-	public void interpretFile(String fileName) throws IOException, SyntaxException {
+	public InterpretedFile interpretFile(String fileName) throws IOException, SyntaxException {
 		fileToRead = new File(rootFileAddress + File.separator + fileName + ".owl");
 		fileReader = new FileReader(fileToRead, StandardCharsets.UTF_8);
+		
+		InterpretedFile interpretedFile = new InterpretedFile();
 		
 		String word;
 		do {
@@ -27,6 +29,8 @@ public class FileInterpreter {
 						"file: " + fileToRead.getAbsolutePath(), "unexpected characters");
 			}else if(word.equals("class")) {
 				
+			}else if(word.equals("function")) {
+				
 			}else {
 				throw new SyntaxException("Unexpected word", charsRead, linesRead, charsReadInLine,
 						"file: " + fileToRead.getAbsolutePath(), "unexpected words");
@@ -34,7 +38,7 @@ public class FileInterpreter {
 			
 		} while (word != null);
 		
-		// TODO: return Classy[]
+		return interpretedFile;
 	}
 	
 	void readChar() throws IOException {

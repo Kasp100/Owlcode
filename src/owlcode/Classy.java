@@ -2,11 +2,9 @@ package owlcode;
 
 public class Classy {
 	public String className;
-	public String localPackage;
-	public Classy[] imports;
 	
-	public ClassyObject createInstance() {
-		ClassyObject createdObject = new ClassyObject();
+	public OwlyObject createInstance() {
+		OwlyObject createdObject = new OwlyObject();
 		createdObject.instanceOf = this;
 		return createdObject;
 	}
