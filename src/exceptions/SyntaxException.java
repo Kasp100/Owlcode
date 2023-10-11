@@ -1,6 +1,6 @@
 package exceptions;
 
-public class SyntaxException extends BaseOwlException {
+public class SyntaxException extends OwlyException {
 	private static final long serialVersionUID = -2157114152936866288L;
 	public SyntaxException(String message, int charsRead, int linesRead, int charsReadInLine,
 			String documentSource, String documentationPage) {
