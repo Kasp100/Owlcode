@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets;
 import exceptions.SyntaxException;
 
 public class FileInterpreter {
+	static final String LETTERS = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	
 	static String rootFileAddress;
 	File fileToRead;
 	InputStreamReader fileReader;
@@ -41,7 +43,7 @@ public class FileInterpreter {
 		return interpretedFile;
 	}
 	
-	void readChar() throws IOException {
+	public void readChar() throws IOException {
 		lastCharRead = fileReader.read();
 		charsRead++;
 		if(lastCharRead == '\n') {
@@ -50,7 +52,7 @@ public class FileInterpreter {
 		}
 	}
 	
-	String readWord() throws IOException {
+	public String readWord() throws IOException {
 		boolean readingWord = false;
 		StringBuilder wordBuilder = new StringBuilder();
 		
@@ -58,8 +60,9 @@ public class FileInterpreter {
 			readChar(); 
 			if(lastCharRead != -1) {
 				
-				boolean isLetter = ("_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789").contains((lastCharRead + "").toLowerCase());
-				boolean isSpace = ("" + lastCharRead).isBlank();
+				final String lastCharAsString = lastCharRead + "";
+				boolean isLetter = LETTERS.contains(lastCharAsString);
+				boolean isSpace = lastCharAsString.isBlank();
 				
 				if(readingWord) {
 					
@@ -84,19 +87,27 @@ public class FileInterpreter {
 		return null;
 	}
 	
-	String getMeaning(String word) {
+	public static WordMeaning getMeaning(String word) {
 		if(word.equals("if") || word.equals("while") || word.equals("for")
 				|| word.equals("else")|| word.equals("return")) {
-			return "keyword";
+			return WordMeaning.KEYWORD;
 		}else if(word.equals("null")) {
-			return "null";
+			return WordMeaning.NULL;
 		}else if(word.equals("int") || word.equals("long") || word.equals("boolean")
 				|| word.equals("float")|| word.equals("double")) {
-			return "primitive";
+			return WordMeaning.PRIMITIVE;
 		}else if(Character.isUpperCase(word.charAt(0))) {
-			return "class";
+			return WordMeaning.CLASS;
 		}else {
-			return "name";
+			return WordMeaning.NAME;
 		}
+	}
+	
+	public enum WordMeaning {
+		KEYWORD,
+		NULL,
+		PRIMITIVE,
+		CLASS,
+		NAME,
 	}
 }
