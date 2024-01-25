@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import owlcode.FileInterpreter;
 import owlcode.FileInterpreter.WordMeaning;
-import owlcode.SyntaxException;
+import exceptions.SyntaxException;
 
 public class Classy {
 	public String className;
@@ -18,7 +18,7 @@ public class Classy {
 	public Classy(FileInterpreter fileInterpreter) throws IOException, SyntaxException {
 		String readClassName = fileInterpreter.readWord();
 		if(FileInterpreter.getMeaning(readClassName) != WordMeaning.CLASS) {
-			throw new SyntaxException("Class names cannot be keywords and have to start with an uppercase letter.");
+			throw fileInterpreter.createSyntaxException("Class names cannot be keywords and have to start with an uppercase letter.", "class naming failure");
 		}
 		className = readClassName;
 		

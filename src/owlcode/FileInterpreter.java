@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 import exceptions.SyntaxException;
+import owly_data.Classy;
 
 public class FileInterpreter {
 	static final String LETTERS = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -16,7 +17,7 @@ public class FileInterpreter {
 	InputStreamReader fileReader;
 	private int lastCharRead;
 	int charsRead, linesRead, charsReadInLine;
-	public InterpretedFile interpretFile(String fileName) throws IOException, SyntaxException {
+	public InterpretedFile interpretFile(String fileName) throws IOException, SyntaxException, SyntaxException {
 		fileToRead = new File(rootFileAddress + File.separator + fileName + ".owl");
 		fileReader = new FileReader(fileToRead, StandardCharsets.UTF_8);
 		
@@ -30,7 +31,8 @@ public class FileInterpreter {
 				throw new SyntaxException("Unexpected character", charsRead, linesRead, charsReadInLine,
 						"file: " + fileToRead.getAbsolutePath(), "unexpected characters");
 			}else if(word.equals("class")) {
-				
+				Classy createdClass = new Classy(this);
+				interpretedFile.classes.put(createdClass.className, createdClass);
 			}else if(word.equals("function")) {
 				
 			}else {
@@ -85,6 +87,11 @@ public class FileInterpreter {
 			}
 		} while (lastCharRead != -1);
 		return null;
+	}
+	
+	public SyntaxException createSyntaxException(String message, String docPage) {
+		return new SyntaxException(message, charsRead, linesRead, charsReadInLine,
+				"file: " + fileToRead.getAbsolutePath(), docPage);
 	}
 	
 	public static WordMeaning getMeaning(String word) {
