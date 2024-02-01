@@ -22,5 +22,14 @@ public class Classy {
 		}
 		className = readClassName;
 		
+		while(true) {
+			Object read = fileInterpreter.readAny();
+			Class<? extends Object> classRead = read.getClass();
+			if(classRead == String.class) {
+				
+			}else if(classRead.getSuperclass() == Primitivey.class) {
+				
+			}
+		}
 	}
 }

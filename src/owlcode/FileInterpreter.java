@@ -8,15 +8,21 @@ import java.nio.charset.StandardCharsets;
 
 import exceptions.SyntaxException;
 import owly_data.Classy;
+import owly_data.OwlyDouble;
+import owly_data.OwlyFloat;
+import owly_data.OwlyInt;
+import owly_data.OwlyLong;
 
 public class FileInterpreter {
 	static final String LETTERS = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	static final String DIGITS = "0123456789";
 	
 	static String rootFileAddress;
 	File fileToRead;
 	InputStreamReader fileReader;
 	private int lastCharRead;
 	int charsRead, linesRead, charsReadInLine;
+	boolean nextCharRead = false;
 	public InterpretedFile interpretFile(String fileName) throws IOException, SyntaxException, SyntaxException {
 		fileToRead = new File(rootFileAddress + File.separator + fileName + ".owl");
 		fileReader = new FileReader(fileToRead, StandardCharsets.UTF_8);
@@ -45,13 +51,37 @@ public class FileInterpreter {
 		return interpretedFile;
 	}
 	
-	public void readChar() throws IOException {
+	private void readChar() throws IOException {
+		if(nextCharRead) {
+			nextCharRead = false;
+			return;
+		}
 		lastCharRead = fileReader.read();
 		charsRead++;
 		if(lastCharRead == '\n') {
-			++linesRead;
+			linesRead++;
 			charsReadInLine = 0;
 		}
+	}
+	
+	public Object readAny() throws IOException, SyntaxException {
+		readChar();
+		
+		if(lastCharRead == -1) {
+			throw createSyntaxException("File ends abruptly.", "abrupt end of file");
+		}
+		
+		String read = getCharRead() + "";
+		if(DIGITS.contains(read) || read.equals("-")) {
+			return readNumber();
+		}else if(LETTERS.contains(read)) {
+			read = readWord();
+		}
+		return read;
+	}
+	
+	private char getCharRead() {
+		return (char) lastCharRead;
 	}
 	
 	public String readWord() throws IOException {
@@ -62,14 +92,14 @@ public class FileInterpreter {
 			readChar(); 
 			if(lastCharRead != -1) {
 				
-				final String lastCharAsString = lastCharRead + "";
+				final String lastCharAsString = "" + getCharRead();
 				boolean isLetter = LETTERS.contains(lastCharAsString);
 				boolean isSpace = lastCharAsString.isBlank();
 				
 				if(readingWord) {
 					
 					if(isLetter) {
-						wordBuilder.append(lastCharRead);
+						wordBuilder.append(lastCharAsString);
 					}else {
 						String word = wordBuilder.toString();
 						wordBuilder = new StringBuilder();
@@ -78,7 +108,7 @@ public class FileInterpreter {
 					
 				}else {
 					if(isLetter) {
-						wordBuilder.append(lastCharRead);
+						wordBuilder.append(lastCharAsString);
 						readingWord = true;
 					}else if(!isSpace) {
 						return null;
@@ -87,6 +117,47 @@ public class FileInterpreter {
 			}
 		} while (lastCharRead != -1);
 		return null;
+	}
+	
+	private Object readNumber() throws IOException, SyntaxException {
+		boolean hasFractionalPart = false;
+		StringBuilder numberBuilder = new StringBuilder();
+		
+		String read;
+		boolean validPartOfNumber;
+		do{
+			validPartOfNumber = false;
+			
+			readChar();
+			read = getCharRead() + "";
+			if(lastCharRead == -1) throw createSyntaxException("File ends abruptly whilest reading a number.", "abrupt end of file");
+			if(DIGITS.contains(read) || read.equals("_")) {
+				validPartOfNumber = true;
+			}else if(read.equals(".")) {
+				validPartOfNumber = true;
+			}
+			
+		}while(validPartOfNumber);
+		
+		try {
+			if(getCharRead() == 'B') {
+				if(hasFractionalPart) {
+					return new OwlyDouble(Double.parseDouble(numberBuilder.toString()));
+				}else {
+					return new OwlyLong(Long.parseLong(numberBuilder.toString()));
+				}
+			}else {
+				nextCharRead = true;
+			}
+			
+			if(hasFractionalPart) {
+				return new OwlyFloat(Float.parseFloat(numberBuilder.toString()));
+			}
+			
+			return new OwlyInt(Integer.parseInt(numberBuilder.toString()));
+		} catch (NumberFormatException e) {
+			throw createSyntaxException(e.getClass().getName() + ": " + e.getMessage(), "number format exception");
+		}
 	}
 	
 	public SyntaxException createSyntaxException(String message, String docPage) {
