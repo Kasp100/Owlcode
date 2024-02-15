@@ -25,9 +25,11 @@ public class Classy {
 			Object read = fileInterpreter.readAny();
 			Class<? extends Object> classRead = read.getClass();
 			if(classRead == String.class) {
+				// it must be a word
 			}else if(classRead == Character.class) {
 				
 			}else if(classRead.getSuperclass() == Primitivey.class) {
+				// it must be a number/boolean
 				
 			}
 		}
