@@ -1,6 +1,8 @@
 package owly_data;
 
-public class OwlyInt extends Primitivey {
+import owlcode.Type;
+
+public class OwlyInt {
 	public int value;
 	public OwlyInt(int value) {
 		this.value = value;

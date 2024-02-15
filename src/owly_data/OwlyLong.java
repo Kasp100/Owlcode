@@ -1,6 +1,8 @@
 package owly_data;
 
-public class OwlyLong extends Primitivey {
+import owlcode.Type;
+
+public class OwlyLong {
 	public long value;
 	public OwlyLong(long value) {
 		this.value = value;

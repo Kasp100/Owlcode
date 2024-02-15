@@ -1,6 +1,8 @@
 package owly_data;
 
-public class OwlyFloat extends Primitivey {
+import owlcode.Type;
+
+public class OwlyFloat {
 	public float value;
 	public OwlyFloat(float value) {
 		this.value = value;

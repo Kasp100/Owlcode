@@ -5,8 +5,7 @@ import java.util.HashMap;
 public class OwlyObject {
 	private Classy instanceOf;
 	
-	private HashMap<String, OwlyObject> subObjects = new HashMap<>();
-	private HashMap<String, Primitivey> variables = new HashMap<>();
+	private HashMap<String, Object> state = new HashMap<>();
 	
 	public OwlyObject(Classy classy) {
 		
@@ -14,9 +13,7 @@ public class OwlyObject {
 	
 	/** @return the value of the field associated to the given identifier, this can be either an object or a variable. */
 	public Object get(String identifier) {
-		Primitivey variable = variables.get(identifier);
-		if(variable != null) return variable;
-		return subObjects.get(identifier);
+		return state.get(identifier);
 	}
 	public Classy getClassy() {
 		return instanceOf;
