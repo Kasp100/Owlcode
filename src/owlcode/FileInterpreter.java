@@ -14,15 +14,15 @@ import owly_data.OwlyInt;
 import owly_data.OwlyLong;
 
 public class FileInterpreter {
-	static final String LETTERS = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	static final String DIGITS = "0123456789";
+	private static final String LETTERS = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	private static final String DIGITS = "0123456789";
 	
-	static String rootFileAddress;
-	File fileToRead;
-	InputStreamReader fileReader;
+	private static String rootFileAddress;
+	private File fileToRead;
+	private InputStreamReader fileReader;
 	private int lastCharRead;
-	int charsRead, linesRead, charsReadInLine;
-	boolean nextCharRead = false;
+	private int charsRead, linesRead, charsReadInLine;
+	private boolean nextCharRead = false;
 	public InterpretedFile interpretFile(String fileName) throws IOException, SyntaxException, SyntaxException {
 		fileToRead = new File(rootFileAddress + File.separator + fileName + ".owl");
 		fileReader = new FileReader(fileToRead, StandardCharsets.UTF_8);
@@ -38,7 +38,7 @@ public class FileInterpreter {
 						"file: " + fileToRead.getAbsolutePath(), "unexpected characters");
 			}else if(word.equals("class")) {
 				Classy createdClass = new Classy(this);
-				interpretedFile.classes.put(createdClass.className, createdClass);
+				interpretedFile.classes.put(createdClass.getName(), createdClass);
 			}else if(word.equals("function")) {
 				
 			}else {
@@ -64,6 +64,10 @@ public class FileInterpreter {
 		}
 	}
 	
+	public void flagLastAsUnread() {
+		nextCharRead = true;
+	}
+	
 	public Object readAny() throws IOException, SyntaxException {
 		readChar();
 		
@@ -73,10 +77,10 @@ public class FileInterpreter {
 		
 		char read = getCharRead();
 		if(DIGITS.contains("" + read) || read == '-') {
-			nextCharRead = true;
+			flagLastAsUnread();
 			return readNumber();
 		}else if(LETTERS.contains("" + read)) {
-			nextCharRead = true;
+			flagLastAsUnread();
 			return readWord();
 		}
 		return read;
