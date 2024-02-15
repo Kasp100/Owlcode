@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 import exceptions.SyntaxException;
 import owly_data.Classy;
+import owly_data.OwlyBoolean;
 import owly_data.OwlyDouble;
 import owly_data.OwlyFloat;
 import owly_data.OwlyInt;
@@ -23,11 +24,10 @@ public class FileInterpreter {
 	private int lastCharRead;
 	private int charsRead, linesRead, charsReadInLine;
 	private boolean nextCharRead = false;
+	private InterpretedFile interpretedFile = new InterpretedFile();
 	public InterpretedFile interpretFile(String fileName) throws IOException, SyntaxException, SyntaxException {
 		fileToRead = new File(rootFileAddress + File.separator + fileName + ".owl");
 		fileReader = new FileReader(fileToRead, StandardCharsets.UTF_8);
-		
-		InterpretedFile interpretedFile = new InterpretedFile();
 		
 		String word;
 		do {
@@ -36,6 +36,8 @@ public class FileInterpreter {
 			if(word == null) {
 				throw new SyntaxException("Unexpected character", charsRead, linesRead, charsReadInLine,
 						"file: " + fileToRead.getAbsolutePath(), "unexpected characters");
+			}else if(word.equals("import")) {
+				
 			}else if(word.equals("class")) {
 				Classy createdClass = new Classy(this);
 				interpretedFile.classes.put(createdClass.getName(), createdClass);
@@ -177,5 +179,33 @@ public class FileInterpreter {
 	public SyntaxException createSyntaxException(String message, String docPage) {
 		return new SyntaxException(message, charsRead, linesRead, charsReadInLine,
 				"file: " + fileToRead.getAbsolutePath(), docPage);
+	}
+	
+	public static boolean checkClassName(final String classNameRead) {
+		return Character.isUpperCase(classNameRead.charAt(0));
+	}
+	
+	public static boolean checkPrimitiveName(final String primitiveNameRead) {
+		return getPrimitiveClass(primitiveNameRead) != null;
+	}
+	
+	public static Type getPrimitiveClass(final String type) {
+		if(type.equals("boolean")) {
+			return OwlyBoolean.class;
+		}else if(type.equals("int")) {
+			return OwlyInt.class;
+		}else if(type.equals("float")) {
+			return OwlyFloat.class;
+		}else if(type.equals("long")) {
+			return OwlyLong.class;
+		}else if(type.equals("double")) {
+			return OwlyDouble.class;
+		}else {
+			return null;
+		}
+	}
+	
+	public Classy getClassFromImports(String className) {
+		return interpretedFile.importedClasses.get(className);
 	}
 }
