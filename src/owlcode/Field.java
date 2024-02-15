@@ -1,20 +1,14 @@
 package owlcode;
 
 public class Field {
-	private String fieldName;
 	private Class<?> type;
 	private boolean constant;
 	private boolean publicAccess;
-	public Field(String fieldName, Class<?> type, boolean constant, boolean publicAccess) {
-		this.fieldName = fieldName;
+	public Field(Class<?> type, boolean constant, boolean publicAccess) {
 		this.type = type;
 		this.publicAccess = publicAccess;
 		this.constant = constant;
 		this.publicAccess = publicAccess;
-	}
-	
-	public String getName() {
-		return fieldName;
 	}
 	public Class<?> getType() {
 		return type;

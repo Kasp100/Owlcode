@@ -3,13 +3,13 @@ package owlcode;
 import java.util.HashMap;
 
 import owly_data.Classy;
-import owly_data.OwlyFunction;
+import procedures.Procedure;
 
 public class InterpretedFile {
 	public String path;
 
 	public HashMap<String, Classy> importedClasses = new HashMap<>();
-	public HashMap<String, OwlyFunction> importedFunctions = new HashMap<>();
+	public HashMap<String, Procedure> importedFunctions = new HashMap<>();
 	public HashMap<String, Classy> classes = new HashMap<>();
-	public HashMap<String, OwlyFunction> functions = new HashMap<>();
+	public HashMap<String, Procedure> functions = new HashMap<>();
 }

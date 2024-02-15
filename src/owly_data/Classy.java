@@ -13,7 +13,7 @@ import exceptions.SyntaxException;
 
 public class Classy extends Type {
 	private String className;
-	private Field[] fields;
+	private HashMap<String, Field> fields = new HashMap<>();
 	private HashMap<NameAndParameters, BitOfCode[]> methods = new HashMap<>();
 	
 	public OwlyObject createInstance() {
@@ -64,7 +64,9 @@ public class Classy extends Type {
 		}
 	}
 	
-	
+	public Field getField(String identifier) {
+		return fields.get(identifier);
+	}
 	
 	private enum AccessModifier {
 		PUBLIC,

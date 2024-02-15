@@ -1,8 +1,6 @@
 package owly_data;
 
-import owlcode.Type;
-
-public class OwlyFloat {
+public class OwlyFloat extends OwlyData {
 	public float value;
 	public OwlyFloat(float value) {
 		this.value = value;

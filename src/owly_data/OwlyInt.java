@@ -1,8 +1,6 @@
 package owly_data;
 
-import owlcode.Type;
-
-public class OwlyInt {
+public class OwlyInt extends OwlyData {
 	public int value;
 	public OwlyInt(int value) {
 		this.value = value;
