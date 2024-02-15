@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import exceptions.IllegalAccessException;
+import owlcode.Type;
 
 public class OwlyObject extends OwlyData {
 	private Classy instanceOf;
@@ -38,6 +39,10 @@ public class OwlyObject extends OwlyData {
 	}
 	
 	public Classy getClassy() {
+		return instanceOf;
+	}
+	
+	public Type getType() {
 		return instanceOf;
 	}
 }

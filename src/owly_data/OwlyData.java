@@ -1,3 +1,9 @@
 package owly_data;
 
-public class OwlyData {}
+import owlcode.Type;
+
+public class OwlyData {
+	public Type getType() {
+		return null;
+	}
+}
