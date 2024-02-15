@@ -69,7 +69,8 @@ public class FileInterpreter {
 	public void flagLastAsUnread() {
 		nextCharRead = true;
 	}
-	
+
+	/** Reads the next word, number, or character. Skips any preceding white space codepoints. */
 	public Object readAny() throws IOException, SyntaxException {
 		readChar();
 		
@@ -77,7 +78,12 @@ public class FileInterpreter {
 			throw createSyntaxException("File ends abruptly.", "abrupt end of file");
 		}
 		
-		char read = getCharRead();
+		char read;
+		
+		do{
+			read = getCharRead();
+		}while(("" + read).isBlank());
+		
 		if(DIGITS.contains("" + read) || read == '-') {
 			flagLastAsUnread();
 			return readNumber();
@@ -92,6 +98,7 @@ public class FileInterpreter {
 		return (char) lastCharRead;
 	}
 	
+	/** Reads the next word. Skips any preceding white space codepoints. */
 	public String readWord() throws IOException {
 		boolean readingWord = false;
 		StringBuilder wordBuilder = new StringBuilder();
@@ -111,6 +118,7 @@ public class FileInterpreter {
 					}else {
 						String word = wordBuilder.toString();
 						wordBuilder = new StringBuilder();
+						flagLastAsUnread();
 						return word;
 					}
 					
@@ -186,20 +194,24 @@ public class FileInterpreter {
 	}
 	
 	public static boolean checkPrimitiveName(final String primitiveNameRead) {
-		return getPrimitiveClass(primitiveNameRead) != null;
+		return getPrimitiveType(primitiveNameRead) != null;
 	}
 	
-	public static Type getPrimitiveClass(final String type) {
+	public static Type getPrimitiveType(final String type) {
+		Class<?> classFound = null;
 		if(type.equals("boolean")) {
-			return OwlyBoolean.class;
+			classFound = OwlyBoolean.class;
 		}else if(type.equals("int")) {
-			return OwlyInt.class;
+			classFound = OwlyInt.class;
 		}else if(type.equals("float")) {
-			return OwlyFloat.class;
+			classFound = OwlyFloat.class;
 		}else if(type.equals("long")) {
-			return OwlyLong.class;
+			classFound = OwlyLong.class;
 		}else if(type.equals("double")) {
-			return OwlyDouble.class;
+			classFound = OwlyDouble.class;
+		}
+		if(classFound != null) {
+			return new PrimitiveType(classFound);
 		}else {
 			return null;
 		}

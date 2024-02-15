@@ -22,8 +22,6 @@ public class Classy extends Type {
 	}
 	
 	public Classy(FileInterpreter fileInterpreter) throws IOException, SyntaxException {
-		super(false);
-		
 		String readClassName = fileInterpreter.readWord();
 		if(FileInterpreter.checkClassName(readClassName)) {
 			throw fileInterpreter.createSyntaxException("Class names have to start with an uppercase letter.", "class naming failure");
@@ -47,11 +45,10 @@ public class Classy extends Type {
 					}else if(read.equals("constant")) {
 						accessModifiers.add(AccessModifier.CONSTANT);
 					}else if(read.equals("void")) {
-						type = new Voidy();
 					}else if(FileInterpreter.checkClassName(stringRead)) {
 						type = fileInterpreter.getClassFromImports(stringRead);
 					}else {
-						type = FileInterpreter.getPrimitiveClass(stringRead);
+						type = FileInterpreter.getPrimitiveType(stringRead);
 					}
 				}else {
 					
