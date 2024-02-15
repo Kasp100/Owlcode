@@ -71,11 +71,13 @@ public class FileInterpreter {
 			throw createSyntaxException("File ends abruptly.", "abrupt end of file");
 		}
 		
-		String read = getCharRead() + "";
-		if(DIGITS.contains(read) || read.equals("-")) {
+		char read = getCharRead();
+		if(DIGITS.contains("" + read) || read == '-') {
+			nextCharRead = true;
 			return readNumber();
-		}else if(LETTERS.contains(read)) {
-			read = readWord();
+		}else if(LETTERS.contains("" + read)) {
+			nextCharRead = true;
+			return readWord();
 		}
 		return read;
 	}
@@ -163,29 +165,5 @@ public class FileInterpreter {
 	public SyntaxException createSyntaxException(String message, String docPage) {
 		return new SyntaxException(message, charsRead, linesRead, charsReadInLine,
 				"file: " + fileToRead.getAbsolutePath(), docPage);
-	}
-	
-	public static WordMeaning getMeaning(String word) {
-		if(word.equals("if") || word.equals("while") || word.equals("for")
-				|| word.equals("else")|| word.equals("return")) {
-			return WordMeaning.KEYWORD;
-		}else if(word.equals("null")) {
-			return WordMeaning.NULL;
-		}else if(word.equals("int") || word.equals("long") || word.equals("boolean")
-				|| word.equals("float")|| word.equals("double")) {
-			return WordMeaning.PRIMITIVE;
-		}else if(Character.isUpperCase(word.charAt(0))) {
-			return WordMeaning.CLASS;
-		}else {
-			return WordMeaning.NAME;
-		}
-	}
-	
-	public enum WordMeaning {
-		KEYWORD,
-		NULL,
-		PRIMITIVE,
-		CLASS,
-		NAME,
 	}
 }
