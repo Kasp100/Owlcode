@@ -3,7 +3,6 @@ package owly_data;
 import java.io.IOException;
 
 import owlcode.FileInterpreter;
-import owlcode.FileInterpreter.WordMeaning;
 import exceptions.SyntaxException;
 
 public class Classy {
@@ -17,8 +16,8 @@ public class Classy {
 	
 	public Classy(FileInterpreter fileInterpreter) throws IOException, SyntaxException {
 		String readClassName = fileInterpreter.readWord();
-		if(FileInterpreter.getMeaning(readClassName) != WordMeaning.CLASS) {
-			throw fileInterpreter.createSyntaxException("Class names cannot be keywords and have to start with an uppercase letter.", "class naming failure");
+		if(checkClassName(readClassName)) {
+			throw fileInterpreter.createSyntaxException("Class names have to start with an uppercase letter.", "class naming failure");
 		}
 		className = readClassName;
 		
@@ -26,10 +25,15 @@ public class Classy {
 			Object read = fileInterpreter.readAny();
 			Class<? extends Object> classRead = read.getClass();
 			if(classRead == String.class) {
+			}else if(classRead == Character.class) {
 				
 			}else if(classRead.getSuperclass() == Primitivey.class) {
 				
 			}
 		}
+	}
+	
+	private boolean checkClassName(final String classNameRead) {
+		return Character.isUpperCase(classNameRead.charAt(0));
 	}
 }
