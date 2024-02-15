@@ -129,24 +129,32 @@ public class FileInterpreter {
 		boolean hasFractionalPart = false;
 		StringBuilder numberBuilder = new StringBuilder();
 		
-		String read;
+		readChar();
+		
+		if(getCharRead() == '-') {
+			numberBuilder.append('-');
+		}else {
+			flagLastAsUnread();
+		}
+		
+		char read;
 		boolean validPartOfNumber;
 		do{
 			validPartOfNumber = false;
 			
 			readChar();
-			read = getCharRead() + "";
+			read = getCharRead();
 			if(lastCharRead == -1) throw createSyntaxException("File ends abruptly whilest reading a number.", "abrupt end of file");
-			if(DIGITS.contains(read) || read.equals("_")) {
+			if(DIGITS.contains("" + read) || read == '_') {
 				validPartOfNumber = true;
-			}else if(read.equals(".")) {
+			}else if(read == '.') {
 				validPartOfNumber = true;
 			}
-			
+			if(validPartOfNumber) numberBuilder.append(read);
 		}while(validPartOfNumber);
 		
 		try {
-			if(getCharRead() == 'B') {
+			if(getCharRead() == 'l') {
 				if(hasFractionalPart) {
 					return new OwlyDouble(Double.parseDouble(numberBuilder.toString()));
 				}else {
