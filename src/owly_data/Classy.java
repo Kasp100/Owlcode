@@ -2,15 +2,16 @@ package owly_data;
 
 import java.io.IOException;
 
+import owlcode.Field;
 import owlcode.FileInterpreter;
 import exceptions.SyntaxException;
 
 public class Classy {
-	public String className;
+	private String className;
+	private Field[] fields;
 	
 	public OwlyObject createInstance() {
-		OwlyObject createdObject = new OwlyObject();
-		createdObject.instanceOf = this;
+		OwlyObject createdObject = new OwlyObject(this);
 		return createdObject;
 	}
 	
@@ -20,22 +21,31 @@ public class Classy {
 			throw fileInterpreter.createSyntaxException("Class names have to start with an uppercase letter.", "class naming failure");
 		}
 		className = readClassName;
+		boolean classClosed = false;
 		
-		while(true) {
+		while(!classClosed) {
 			Object read = fileInterpreter.readAny();
 			Class<? extends Object> classRead = read.getClass();
 			if(classRead == String.class) {
-				// it must be a word
+				if(checkClassName("")) {
+					
+				}
 			}else if(classRead == Character.class) {
-				
+				char charRead = (char) read;
+				if(charRead == '}') {
+					classClosed = true;
+				}
 			}else if(classRead.getSuperclass() == Primitivey.class) {
-				// it must be a number/boolean
-				
+				throw fileInterpreter.createSyntaxException("Found numeric value without context.", "unexpected numbers");
 			}
 		}
 	}
 	
 	private boolean checkClassName(final String classNameRead) {
 		return Character.isUpperCase(classNameRead.charAt(0));
+	}
+	
+	public String getName() {
+		return className;
 	}
 }
